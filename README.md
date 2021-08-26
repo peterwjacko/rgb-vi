@@ -1,4 +1,6 @@
 # rgb-vi
+![Banner](images/banner.png?raw=true)
+
 Generate a selection of RGB vegetation indices. 
 
 Adapted from [Automating GIS processes](https://automating-gis-processes.github.io/CSC18/lessons/L6/raster-calculations.html)

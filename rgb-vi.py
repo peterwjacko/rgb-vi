@@ -1,16 +1,11 @@
 #%%
+from pathlib import Path, PurePath
 import rasterio as rio
-from rasterio.plot import show
-
 import numpy as np
 np.seterr(divide='ignore', invalid='ignore')
 
-from pathlib import Path, PurePath
-
-#https://automating-gis-processes.github.io/CSC18/lessons/L6/raster-calculations.html
-
 #%%
-input_path = Path("D:\odm_orthophoto\odm_orthophoto.tif")
+input_path = Path("/path/to/image.tif")
 
 #%%
 class veg_index:
@@ -19,6 +14,7 @@ class veg_index:
         self.image_transform = self.image.transform
         self.image_shape = self.image.shape
         self.image_crs = self.image.crs
+        # NOTE: ensure that these band number match your RGB band numbers. Don't get caught out with RGBA images!
         self.bands = {
             'R': self.image.read(1),
             'G': self.image.read(2),
@@ -31,15 +27,15 @@ class veg_index:
             )
         self.image = None
         
-    def gr(self):
+    def gcc(self):
         '''
-        Green Ratio = G/(G+R+B)
+        Green Chromatic Coordinate= G/(G+R+B)
         '''
-        self.vi_name = '_GR'
-        GR = np.empty(self.image_shape, dtype=rio.float32)
-        GR = np.where(self.check, (self.bands['G'])/(self.bands['G']+self.bands['R']+self.bands['B']), -9999)
+        self.vi_name = '_GCC'
+        GCC = np.empty(self.image_shape, dtype=np.float32)
+        GCC = np.where(self.check, (self.bands['G'])/(self.bands['G']+self.bands['R']+self.bands['B']), -9999)
     
-        return GR
+        return GCC
     
     def tgi(self):
         '''
@@ -56,7 +52,7 @@ class veg_index:
 
         '''
         self.vi_name = '_VARI'
-        VARI = np.empty(self.image_shape, dtype=rio.float32)
+        VARI = np.empty(self.image_shape, dtype=np.float32)
         VARI = np.where(self.check, (self.bands['G']-self.bands['R'])/(self.bands['G']+self.bands['R']-self.bands['B']), -9999)
 
         return VARI
@@ -91,15 +87,15 @@ class veg_index:
 
         return GLI
         
-    def eg(self):
+    def exg(self):
         '''
         Excess green = 2*G-R-B
 
         '''
-        self.vi_name = '_EG'
-        EG = np.where(self.check, 2*self.bands['G']-self.bands['R']-self.bands['B'], -9999)
+        self.vi_name = '_ExG'
+        ExG = np.where(self.check, 2*self.bands['G']-self.bands['R']-self.bands['B'], -9999)
 
-        return EG
+        return ExG
     
     def rgbvi(self):
         '''
@@ -124,7 +120,6 @@ class veg_index:
     def ngrvi(self):
         '''
         New green-red vegetation index = ((G**2)+(R**2))/((G**2)-(R**2))
-        ## Zhang et al. 2019
 
         '''
         self.vi_name = '_NGRVI'
@@ -154,13 +149,16 @@ class veg_index:
 
     def veg(self):
         '''
-        Vegetativen = G/((R**0.667)*(B**(1-0.667)))
+        Vegetativen = G/((R**a)*(B**(1-a)))
+        a = 0.667  
 
         '''
         self.vi_name = '_VEG'
-        VEG = np.where(self.check, (self.bands['G'])/((self.bands['R']**0.667)*(self.bands['B']*(1-0.667))), -9999)
+        a = 0.667
+        VEG = np.where(self.check, (self.bands['G'])/((self.bands['R']**a)*(self.bands['B']*(1-a))), -9999)
 
         return VEG
+    
 #%%
 def raster_export(input_path, output_array, vi_object):
         output_fn = input_path.stem + vi_object.vi_name
@@ -175,7 +173,7 @@ def raster_export(input_path, output_array, vi_object):
                 height=vi_object.image_shape[0],
                 width=vi_object.image_shape[1],
                 count=1,
-                dtype=rio.float32,
+                dtype=np.float32,
                 crs=vi_object.image_crs,
                 transform=vi_object.image_transform
                 ) as dst:
@@ -191,14 +189,10 @@ vi = image.veg()
 # write raster to file
 raster_export(input_path=input_path, output_array=vi, vi_object=image)
 
-# %%
-gr, tgi, vari, grvi, ngrdi, gli, eg, rgbvi, mgrvi, rgri, cive, veg
-
-
+#%%
+# iterate through a list of vegetation indices
+exec_methods = ["gcc", "tgi", "vari", "grvi", "ngrdi", "gli", "exg", "rgbvi", "mgrvi", "rgri", "cive", "veg"]
 image = veg_index(input_path)
-
-for k, v in all_vi:
-    vi = image.v()
-    raster_export(input_path=input_path, output_array=vi, vi_object=image)
-    
-# %%
+for method in exec_methods:
+    output = getattr(image, method)()
+    raster_export(input_path=input_path, output_array=output, vi_object=image)

@@ -1,0 +1,9 @@
+name: rgb-vi
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - rasterio
+  - numpy 
+  - jupyter_core
+  - ipykernel

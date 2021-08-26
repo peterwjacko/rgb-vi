@@ -1,7 +1,11 @@
 # rgb-vi
 ![Banner](images/banner.png?raw=true)
 
-Generate a selection of RGB vegetation indices. 
+Generate a selection of RGB vegetation indices using rasterio.
+
+I used this as an opportunity to experiment with rasterio and python classes - there is probably a better way to do it. Some indices are playing up which I will have to fix.
+
+Dependencies in environment.yml
 
 Adapted from [Automating GIS processes](https://automating-gis-processes.github.io/CSC18/lessons/L6/raster-calculations.html)
 
@@ -54,7 +58,6 @@ Hague, T., N. D. Tillett, and H. Wheeler. ‘Automated Crop and Weed Monitoring 
 RGBVI = ((G**2)-R*B)/((G**2)+R*B)
 
 Bendig, Juliane, Kang Yu, Helge Aasen, Andreas Bolten, Simon Bennertz, Janis Broscheit, Martin L. Gnyp, and Georg Bareth. ‘Combining UAV-Based Plant Height from Crop Surface Models, Visible, and near Infrared Vegetation Indices for Biomass Monitoring in Barley’. International Journal of Applied Earth Observation and Geoinformation 39 (1 July 2015): 79–87. https://doi.org/10/f7d28f.
-
 
 ## Green leaf index 
 GLI = (2*G-R-B)/(2*G+R+B)

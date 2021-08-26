@@ -16,7 +16,7 @@ NGRVI = ((G**2)+(R**2))/((G**2)-(R**2))
 
 Zhang, Xianlong, Fei Zhang, Yaxiao Qi, Laifei Deng, Xiaolong Wang, and Shengtian Yang. ‘New Research Methods for Vegetation Information Extraction Based on Visible Light Remote Sensing Images from an Unmanned Aerial Vehicle (UAV)’. International Journal of Applied Earth Observation and Geoinformation 78 (1 June 2019): 215–26. https://doi.org/10/gjhx6m.
 
-## NGRDI
+## Normalized green-red difference index
 NGRDI = (G-B)/(G+B)
 
 Tucker, Compton J. ‘Red and Photographic Infrared Linear Combinations for Monitoring Vegetation’. Remote Sensing of Environment 8, no. 2 (1 May 1979): 127–50. https://doi.org/10/d2t346.
